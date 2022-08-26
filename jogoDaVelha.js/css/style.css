@@ -1,0 +1,33 @@
+* {
+    margin: 0px;
+    padding: 0px;
+}
+
+.input {
+    height: 100px;
+    width: 100px;
+    border: 2px solid transparent;
+    text-align: center;
+    font-size: 100px;
+}
+
+.border-left {
+    border-left: 2px solid blue !important;
+}
+
+.border-right {
+    border-right: 2px solid blue !important;
+}
+
+.border-top {
+    border-top: 2px solid blue !important;
+}
+
+.border-bottom {
+    border-bottom: 2px solid blue !important;
+}
+
+.input:focus {
+    outline: none;
+    border: 2px solid transparent !important;
+}
