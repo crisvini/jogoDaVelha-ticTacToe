@@ -31,3 +31,12 @@
     outline: none;
     border: 2px solid transparent !important;
 }
+
+th {
+    background-color: lightblue;
+}
+
+td, tr, th {
+    border: 1px solid blue;
+    padding-left: 5px;
+}
