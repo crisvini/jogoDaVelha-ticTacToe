@@ -26,7 +26,7 @@
     <div class="container">
         <div class="row mt-2">
             <div class="col-12 text-center">
-                <span class="fw-bold fs-1" style="color: blue;">J</span>
+                <span class="fw-bold fs-1" style="color: blue;">Jogo da Velha</span>
             </div>
         </div>
         <div class="row mt-5">
@@ -68,11 +68,24 @@
                 </div>
             </div>
         </div>
+        <div class="row w-25 mx-auto mt-5 d-none" id="tabela_pontuacao">
+            <span style="color: blue;" class="fw-bold fs-4">Pontuação</span>
+            <table>
+                <tr>
+                    <th id="nome_jogador_x" style="color: blue;"></th>
+                    <th id="nome_jogador_o" style="color: blue;"></th>
+                </tr>
+                <tr>
+                    <td id="pontuacao_jogador_x" style="color: blue;"></td>
+                    <td id="pontuacao_jogador_o" style="color: blue;"></td>
+                </tr>
+            </table>
+        </div>
     </div>
 
     <script>
 
-        var jogadorX = "", jogadorO = "", jogadorGanhador = "", ultimoJogador = "";
+        var jogadorX = "", jogadorO = "", jogadorGanhador = "", ultimoJogador = "", pontuacaoJogadorX = 0, pontuacaoJogadorO = 0, nomeUltimoJogador = "";
 
         $(document).ready(function () {
             Swal.fire({
@@ -106,6 +119,11 @@
                                 confirmButtonText: 'Ok',
                                 confirmButtonColor: 'blue'
                             });
+                            $("#tabela_pontuacao").removeClass("d-none");
+                            $("#nome_jogador_x").text(jogadorX);
+                            $("#nome_jogador_o").text(jogadorO);
+                            $("#pontuacao_jogador_x").text(pontuacaoJogadorX);
+                            $("#pontuacao_jogador_o").text(pontuacaoJogadorO);
                         }, 500);
                     });
                 }, 500);
@@ -116,7 +134,6 @@
             if ($(this).val().toUpperCase().match(/(X|O)/g) == null) {
                 $(this).val("");
             } else {
-
                 if (ultimoJogador == "" || ultimoJogador != $(this).val()) {
                     ultimoJogador = $(this).val();
                     $(this).attr("disabled", true);
@@ -130,9 +147,10 @@
                         || ($("#input_2").val() == "X" && $("#input_5").val() == "X" && $("#input_8").val() == "X")
                         || ($("#input_3").val() == "X" && $("#input_6").val() == "X" && $("#input_9").val() == "X")
                         || ($("#input_3").val() == "X" && $("#input_5").val() == "X" && $("#input_7").val() == "X")
-                        || ($("#input_1").val() == "X" && $("#input_5").val() == "X" && $("#input_9").val() == "X"))
+                        || ($("#input_1").val() == "X" && $("#input_5").val() == "X" && $("#input_9").val() == "X")) {
                         msgGanhador(jogadorX);
-                    else if ($("#input_1").val() != "" && $("#input_2").val() != "" && $("#input_3").val() != "" &&
+                        pontuacaoJogadorX++;
+                    } else if ($("#input_1").val() != "" && $("#input_2").val() != "" && $("#input_3").val() != "" &&
                         $("#input_4").val() != "" && $("#input_5").val() != "" && $("#input_6").val() != "" &&
                         $("#input_9").val() != "" && $("#input_8").val() != "" && $("#input_7").val() != "")
                         msgVelha();
@@ -145,16 +163,19 @@
                         || ($("#input_2").val() == "O" && $("#input_5").val() == "O" && $("#input_8").val() == "O")
                         || ($("#input_3").val() == "O" && $("#input_6").val() == "O" && $("#input_9").val() == "O")
                         || ($("#input_3").val() == "O" && $("#input_5").val() == "O" && $("#input_7").val() == "O")
-                        || ($("#input_1").val() == "O" && $("#input_5").val() == "O" && $("#input_9").val() == "O"))
+                        || ($("#input_1").val() == "O" && $("#input_5").val() == "O" && $("#input_9").val() == "O")) {
                         msgGanhador(jogadorO);
-                    else if ($("#input_1").val() != "" && $("#input_2").val() != "" && $("#input_3").val() != "" &&
+                        pontuacaoJogadorO++;
+                    } else if ($("#input_1").val() != "" && $("#input_2").val() != "" && $("#input_3").val() != "" &&
                         $("#input_4").val() != "" && $("#input_5").val() != "" && $("#input_6").val() != "" &&
                         $("#input_9").val() != "" && $("#input_8").val() != "" && $("#input_7").val() != "")
                         msgVelha();
                 } else {
                     $(this).val("");
+                    if (ultimoJogador == "x" || ultimoJogador == "X") nomeUltimoJogador = jogadorO;
+                    else if (ultimoJogador == "o" || ultimoJogador == "O") nomeUltimoJogador = jogadorX;
                     Swal.fire({
-                        title: 'É a vez do outro jogador!',
+                        title: 'É a vez do ' + nomeUltimoJogador + '!',
                         confirmButtonText: 'Ok',
                         confirmButtonColor: 'blue'
                     });
@@ -169,9 +190,7 @@
                 confirmButtonText: 'Ok',
                 confirmButtonColor: 'blue'
             }).then(function () {
-                setTimeout(function () {
-                    document.location.reload(true);
-                }, 500);
+                finalJogo();
             });
         }
 
@@ -181,10 +200,30 @@
                 confirmButtonText: 'Ok',
                 confirmButtonColor: 'blue'
             }).then(function () {
-                setTimeout(function () {
-                    document.location.reload(true);
-                }, 500);
+                finalJogo();
             });
+        }
+
+        function finalJogo() {
+            setTimeout(function () {
+                Swal.fire({
+                    title: 'Deseja continuar ou iniciar um novo jogo',
+                    showDenyButton: true,
+                    confirmButtonText: 'Novo jogo',
+                    confirmButtonColor: 'lightBlue',
+                    denyButtonText: 'Continuar',
+                    denyButtonColor: 'blue',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        document.location.reload(true);
+                    } else if (result.isDenied) {
+                        $("#pontuacao_jogador_x").text(pontuacaoJogadorX);
+                        $("#pontuacao_jogador_o").text(pontuacaoJogadorO);
+                        $("#input_1, #input_2, #input_3, #input_4, #input_5, #input_6, #input_7, #input_8, #input_9").val("");
+                        $("#input_1, #input_2, #input_3, #input_4, #input_5, #input_6, #input_7, #input_8, #input_9").attr("disabled", false);
+                    }
+                })
+            }, 500);
         }
     </script>
 
